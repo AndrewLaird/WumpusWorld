@@ -95,7 +95,7 @@ class MyAI ( Agent ):
             return self.getAction(stench,breeze,glitter,bump,scream)
         
         #in this position we want to analyze the world around us 
-        self.update_board(stench,breeze)
+        self.update_board(breeze,stench)
         
         #print("player X:",self.x,"Y:",self.y,"Dir:",self.direction)
         #self.print_board()
@@ -159,15 +159,15 @@ class MyAI ( Agent ):
             pits = 0
         
         
+            
+        danger += 10*pits
+            
         if(self.wumpus_alive):
-            if(wumpuses >=2):
+            if(wumpuses >=2 and self.hunting_wumpus and danger == 0):
                 #we know this is the exact position of the wumpus
                 #so lets shoot it if its convienent
                 return 42 
             danger+=10*wumpuses# this is is a safe spot and the best to move to to
-            
-        danger += 10*pits
-            
         return danger 
         
     def find_next_position(self):
@@ -193,7 +193,6 @@ class MyAI ( Agent ):
                             self.ShootInDirection(1)
                         else:
                             self.ShootInDirection(3)
-                    return None
 
                 if(val < best_val):
                     best_pos =(x,y)
@@ -203,9 +202,9 @@ class MyAI ( Agent ):
                     worst_val = val
                 if(val == best_val):
                     if(self.distance_from_player(*best_pos) > self.distance_from_player(x,y)):
-                        
                         best_pos =(x,y)
                         best_val = val
+
         #print("best position is %d,%d"%best_pos)
         #if(best_val == worst_val and best_val >=10):
         if(best_val >= 10):#*((self.move_num//10)+1)):
@@ -271,8 +270,10 @@ class MyAI ( Agent ):
         
         #keep track of the number of tiles we have visited with the first num
         cur_val += 1 
+        #then the second number is how many breeze tiles are adjacent to this tile
         if(breeze):
             cur_val += 10
+        #the third value is how many stentches are adjacent
         if(stench):
             cur_val += 100
         self.board[new_y][new_x] = cur_val

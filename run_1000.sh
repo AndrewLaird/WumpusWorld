@@ -13,8 +13,8 @@ do
     if [ $value -eq -1 ]
     then
         NONSTART=$((NONSTART+1))
-    #else
-    #    echo $value
+    else
+        echo $value
     fi
     SUM=$((SUM+value))
 done    
